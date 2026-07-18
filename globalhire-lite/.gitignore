@@ -1,0 +1,8 @@
+node_modules
+dist
+coverage
+.env
+.env.local
+apps/api/prisma/dev.db
+apps/api/src/generated
+*.log

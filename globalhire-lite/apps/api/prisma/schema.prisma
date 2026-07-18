@@ -1,0 +1,369 @@
+// MIGRATION_NOTE: Original implementation commented out during C#/.NET migration. New code lives in migrated-dotnet/.
+// generator client {
+//   provider = "prisma-client-js"
+// }
+//
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+//
+// enum Role {
+//   PLATFORM_ADMIN
+//   EOR_SPECIALIST
+//   CLIENT_ADMIN
+//   CLIENT_MANAGER
+//   WORKER
+// }
+//
+// enum OrganizationStatus {
+//   ACTIVE
+//   SUSPENDED
+// }
+//
+// enum WorkerStatus {
+//   DRAFT
+//   ONBOARDING
+//   ACTIVE
+//   ON_LEAVE
+//   OFFBOARDING
+//   TERMINATED
+// }
+//
+// enum EmploymentType {
+//   FULL_TIME
+//   PART_TIME
+//   CONTRACTOR
+// }
+//
+// enum ContractStatus {
+//   DRAFT
+//   SENT
+//   SIGNED
+//   CANCELLED
+// }
+//
+// enum OnboardingCategory {
+//   PERSONAL_INFO
+//   DOCUMENT
+//   CONTRACT
+//   TAX
+//   BANK
+//   BENEFITS
+//   COMPLIANCE
+// }
+//
+// enum OnboardingTaskStatus {
+//   NOT_STARTED
+//   IN_PROGRESS
+//   SUBMITTED
+//   APPROVED
+//   REJECTED
+//   BLOCKED
+// }
+//
+// enum DocumentType {
+//   IDENTITY
+//   CONTRACT
+//   TAX_FORM
+//   BANK_PROOF
+//   OTHER
+// }
+//
+// enum DocumentStatus {
+//   UPLOADED
+//   APPROVED
+//   REJECTED
+// }
+//
+// enum LeaveType {
+//   VACATION
+//   SICK
+//   PERSONAL
+//   PARENTAL
+// }
+//
+// enum LeaveStatus {
+//   PENDING
+//   APPROVED
+//   REJECTED
+//   CANCELLED
+// }
+//
+// enum TimesheetStatus {
+//   DRAFT
+//   SUBMITTED
+//   APPROVED
+//   REJECTED
+// }
+//
+// enum PayrollRunStatus {
+//   DRAFT
+//   CALCULATED
+//   APPROVED
+//   LOCKED
+// }
+//
+// enum InvoiceStatus {
+//   DRAFT
+//   ISSUED
+//   PAID
+//   VOID
+// }
+//
+// enum OffboardingStatus {
+//   REQUESTED
+//   IN_REVIEW
+//   APPROVED
+//   COMPLETED
+//   CANCELLED
+// }
+//
+// model User {
+//   id             String        @id @default(cuid())
+//   email          String        @unique
+//   passwordHash   String
+//   firstName      String
+//   lastName       String
+//   role           Role
+//   organizationId String?
+//   organization   Organization? @relation(fields: [organizationId], references: [id])
+//   workerProfile  Worker?       @relation("WorkerUser")
+//   managedWorkers Worker[]      @relation("WorkerManager")
+//   reviewedTasks  OnboardingTask[] @relation("TaskReviewer")
+//   uploadedDocs   WorkerDocument[] @relation("DocUploader")
+//   reviewedLeaves LeaveRequest[] @relation("LeaveReviewer")
+//   reviewedSheets Timesheet[]   @relation("TimesheetReviewer")
+//   payrollRuns    PayrollRun[]  @relation("PayrollCreator")
+//   approvedPayrollRuns PayrollRun[] @relation("PayrollApprover")
+//   offboardingRequests OffboardingCase[] @relation("OffboardingRequester")
+//   auditLogs      AuditLog[]
+//   createdAt      DateTime      @default(now())
+//   updatedAt      DateTime      @updatedAt
+// }
+//
+// model Organization {
+//   id                  String        @id @default(cuid())
+//   name                String
+//   industry            String
+//   headquartersCountry String
+//   status              OrganizationStatus @default(ACTIVE)
+//   users               User[]
+//   workers             Worker[]
+//   payrollRuns         PayrollRun[]
+//   invoices            Invoice[]
+//   auditLogs           AuditLog[]
+//   createdAt           DateTime      @default(now())
+//   updatedAt           DateTime      @updatedAt
+// }
+//
+// model Worker {
+//   id             String        @id @default(cuid())
+//   organizationId String
+//   userId         String?       @unique
+//   managerId      String?
+//   firstName      String
+//   lastName       String
+//   email          String
+//   countryCode    String
+//   jobTitle       String
+//   department     String
+//   employmentType EmploymentType
+//   status         WorkerStatus  @default(ONBOARDING)
+//   startDate      DateTime
+//   organization   Organization  @relation(fields: [organizationId], references: [id])
+//   user           User?         @relation("WorkerUser", fields: [userId], references: [id])
+//   manager        User?         @relation("WorkerManager", fields: [managerId], references: [id])
+//   employment     Employment?
+//   onboardingTasks OnboardingTask[]
+//   documents      WorkerDocument[]
+//   leaveRequests  LeaveRequest[]
+//   timesheets     Timesheet[]
+//   payrollItems   PayrollItem[]
+//   offboardingCases OffboardingCase[]
+//   createdAt      DateTime      @default(now())
+//   updatedAt      DateTime      @updatedAt
+//
+//   @@index([organizationId])
+//   @@index([email])
+// }
+//
+// model Employment {
+//   id             String        @id @default(cuid())
+//   workerId       String        @unique
+//   salaryAmount   Float
+//   salaryCurrency String
+//   employmentType EmploymentType
+//   startDate      DateTime
+//   endDate        DateTime?
+//   contractStatus ContractStatus @default(DRAFT)
+//   worker         Worker        @relation(fields: [workerId], references: [id], onDelete: Cascade)
+//   createdAt      DateTime      @default(now())
+//   updatedAt      DateTime      @updatedAt
+// }
+//
+// model CountryRule {
+//   id                    String   @id @default(cuid())
+//   countryCode           String   @unique
+//   countryName           String
+//   currency              String
+//   probationPeriodDays   Int
+//   statutoryVacationDays Int
+//   noticePeriodDays      Int
+//   requiresTaxId         Boolean
+//   requiresBankDetails   Boolean
+//   requiresSignedContract Boolean
+//   employerCostPercent   Float
+//   employeeTaxPercent    Float
+//   createdAt             DateTime @default(now())
+//   updatedAt             DateTime @updatedAt
+// }
+//
+// model OnboardingTask {
+//   id              String        @id @default(cuid())
+//   workerId        String
+//   title           String
+//   description     String
+//   category        OnboardingCategory
+//   required        Boolean      @default(true)
+//   status          OnboardingTaskStatus @default(NOT_STARTED)
+//   submittedAt     DateTime?
+//   reviewedAt      DateTime?
+//   reviewedById    String?
+//   rejectionReason String?
+//   worker          Worker       @relation(fields: [workerId], references: [id], onDelete: Cascade)
+//   reviewedBy      User?        @relation("TaskReviewer", fields: [reviewedById], references: [id])
+//   createdAt       DateTime     @default(now())
+//   updatedAt       DateTime     @updatedAt
+// }
+//
+// model WorkerDocument {
+//   id           String         @id @default(cuid())
+//   workerId     String
+//   uploadedById String
+//   fileName     String
+//   documentType DocumentType
+//   status       DocumentStatus @default(UPLOADED)
+//   worker       Worker         @relation(fields: [workerId], references: [id], onDelete: Cascade)
+//   uploadedBy   User           @relation("DocUploader", fields: [uploadedById], references: [id])
+//   createdAt    DateTime       @default(now())
+//   updatedAt    DateTime       @updatedAt
+// }
+//
+// model LeaveRequest {
+//   id           String      @id @default(cuid())
+//   workerId     String
+//   leaveType    LeaveType
+//   startDate    DateTime
+//   endDate      DateTime
+//   reason       String
+//   status       LeaveStatus @default(PENDING)
+//   reviewedById String?
+//   reviewedAt   DateTime?
+//   worker       Worker      @relation(fields: [workerId], references: [id], onDelete: Cascade)
+//   reviewedBy   User?       @relation("LeaveReviewer", fields: [reviewedById], references: [id])
+//   createdAt    DateTime    @default(now())
+//   updatedAt    DateTime    @updatedAt
+// }
+//
+// model Timesheet {
+//   id             String     @id @default(cuid())
+//   workerId       String
+//   weekStartDate  DateTime
+//   regularHours   Float
+//   overtimeHours  Float
+//   notes          String
+//   status         TimesheetStatus @default(DRAFT)
+//   reviewedById   String?
+//   reviewedAt     DateTime?
+//   worker         Worker     @relation(fields: [workerId], references: [id], onDelete: Cascade)
+//   reviewedBy     User?      @relation("TimesheetReviewer", fields: [reviewedById], references: [id])
+//   createdAt      DateTime   @default(now())
+//   updatedAt      DateTime   @updatedAt
+// }
+//
+// model PayrollRun {
+//   id                String     @id @default(cuid())
+//   organizationId    String
+//   periodStart       DateTime
+//   periodEnd         DateTime
+//   status            PayrollRunStatus @default(DRAFT)
+//   currency          String
+//   grossTotal        Float      @default(0)
+//   employeeTaxTotal  Float      @default(0)
+//   employerCostTotal Float      @default(0)
+//   netTotal          Float      @default(0)
+//   createdById       String
+//   approvedById      String?
+//   approvedAt        DateTime?
+//   lockedAt          DateTime?
+//   organization      Organization @relation(fields: [organizationId], references: [id])
+//   createdBy         User       @relation("PayrollCreator", fields: [createdById], references: [id])
+//   approvedBy        User?      @relation("PayrollApprover", fields: [approvedById], references: [id])
+//   items             PayrollItem[]
+//   invoice           Invoice?
+//   createdAt         DateTime   @default(now())
+//   updatedAt         DateTime   @updatedAt
+// }
+//
+// model PayrollItem {
+//   id           String     @id @default(cuid())
+//   payrollRunId String
+//   workerId     String
+//   grossPay     Float
+//   overtimePay  Float
+//   employeeTax  Float
+//   employerCost Float
+//   netPay       Float
+//   currency     String
+//   payrollRun   PayrollRun @relation(fields: [payrollRunId], references: [id], onDelete: Cascade)
+//   worker       Worker     @relation(fields: [workerId], references: [id])
+//   createdAt    DateTime   @default(now())
+//   updatedAt    DateTime   @updatedAt
+// }
+//
+// model Invoice {
+//   id             String        @id @default(cuid())
+//   organizationId String
+//   payrollRunId   String        @unique
+//   invoiceNumber  String        @unique
+//   subtotal       Float
+//   platformFee    Float
+//   total          Float
+//   currency       String
+//   status         InvoiceStatus @default(DRAFT)
+//   dueDate        DateTime
+//   organization   Organization  @relation(fields: [organizationId], references: [id])
+//   payrollRun     PayrollRun    @relation(fields: [payrollRunId], references: [id])
+//   createdAt      DateTime      @default(now())
+//   updatedAt      DateTime      @updatedAt
+// }
+//
+// model OffboardingCase {
+//   id             String   @id @default(cuid())
+//   workerId       String
+//   requestedById  String
+//   reason         String
+//   lastWorkingDay DateTime
+//   status         OffboardingStatus @default(REQUESTED)
+//   notes          String?
+//   worker         Worker   @relation(fields: [workerId], references: [id])
+//   requestedBy    User     @relation("OffboardingRequester", fields: [requestedById], references: [id])
+//   createdAt      DateTime @default(now())
+//   updatedAt      DateTime @updatedAt
+// }
+//
+// model AuditLog {
+//   id             String   @id @default(cuid())
+//   organizationId String?
+//   actorUserId    String?
+//   entityType     String
+//   entityId       String
+//   action         String
+//   message        String
+//   metadataJson   Json?
+//   organization   Organization? @relation(fields: [organizationId], references: [id])
+//   actorUser      User?    @relation(fields: [actorUserId], references: [id])
+//   createdAt      DateTime @default(now())
+// }
+//

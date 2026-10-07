@@ -10,7 +10,7 @@ the domain demands it.
 
 ## 1. The comment-out migration (the headline lesson)
 
-Every one of the 88 original TypeScript files looks like this:
+Every one of the 87 original source files (81 `.ts`/`.tsx`, plus the Prisma schema, `index.html`, `index.css`, `packages/shared/src/index.js`, `postcss.config.cjs` and the root `.eslintrc.cjs`) looks like this:
 
 ```ts
 // MIGRATION_NOTE: Original implementation commented out during C#/.NET migration. New code lives in migrated-dotnet/.

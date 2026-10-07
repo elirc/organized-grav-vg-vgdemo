@@ -16,6 +16,14 @@ Use this material honestly: if your production experience was mainly JavaScript,
 - [08-common-interview-story-prompts.md](./08-common-interview-story-prompts.md): Common behavioral and technical story categories to prepare before the interview.
 - [09-aws-to-azure-experience-translation.md](./09-aws-to-azure-experience-translation.md): How to translate AWS/serverless, CI/CD, Git, and Agile delivery experience into the Azure language used in the job posting.
 
+Longer editions of three of these files also live here and are not linked above in the original list:
+
+- [001-interview-stories-dotnet.md](./001-interview-stories-dotnet.md): the expanded version of `01-interview-stories-dotnet.md`.
+- [007-mid-senior-dotnet-story-bank.md](./007-mid-senior-dotnet-story-bank.md): the expanded version of `07-mid-senior-dotnet-story-bank.md`.
+- [008-common-interview-story-prompts.md](./008-common-interview-story-prompts.md): the expanded version of `08-common-interview-story-prompts.md`.
+
+Start with the two-digit files; move to the three-digit editions when you want more stories per topic.
+
 ## Your Core Interview Angle
 
 Short version:

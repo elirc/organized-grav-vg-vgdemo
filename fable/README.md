@@ -22,7 +22,7 @@ The repo contains **two complete implementations** of the same product:
 | Frontend | React, TanStack Query, React Hook Form, Tailwind | React, hand-rolled `useLoad` hook, plain CSS |
 | Status | **Entirely commented out** (every line prefixed with `//`) | **The live code** |
 
-That migration decision — commenting out 88 files instead of using version control — is
+That migration decision — commenting out 87 files (81 `.ts`/`.tsx` plus the Prisma schema, HTML, CSS, one `.js` and two `.cjs` configs) instead of using version control — is
 itself one of the biggest lessons in this repo. See `04-overengineering-and-complexity.md`.
 
 ## Reading order

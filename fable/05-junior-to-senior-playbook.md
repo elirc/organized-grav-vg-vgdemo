@@ -16,7 +16,7 @@ to spend complexity.
 - **Senior:** commits before *and* during risky work, in small reviewable units with
   messages that explain *why*; deletes dead code fearlessly because history has it;
   treats `.gitignore` as part of project setup; uses branches for experiments.
-- **In this repo:** 88 files commented out + zero commits (file 04). One `git init` +
+- **In this repo:** 87 files commented out + no history before the snapshot import (file 04). One `git init` +
   one commit would have made the entire `MIGRATION_NOTE` apparatus unnecessary.
 
 Habit to build now: `git log --oneline` on any repo you open, before reading code.

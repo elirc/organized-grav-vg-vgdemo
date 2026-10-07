@@ -120,7 +120,7 @@
 **Tips:**
 - Match sidebar audit visibility (`apps/web/src/components/layout/Sidebar.tsx:18-20`).
 - Audit model includes entity, action, message, metadata, and time (`apps/api/prisma/schema.prisma:355-367`).
-- Use `formatDate` for timestamps (`apps/web/src/utils/formatDate.ts:1-10`).
+- Use `formatDate` for timestamps (`apps/web/src/utils/formatDate.ts:2-3`, commented out like the rest of `apps/`).
 **What Could Go Wrong:**
 - Workers see organization-wide activity.
 - Dashboard makes duplicate requests that `/api/dashboard` could own.
